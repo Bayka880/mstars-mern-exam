@@ -10,13 +10,27 @@ import axios from "axios";
 import useSWR from "swr";
 import DatePicker from "react-datepicker";
 import { RiDeleteBinLine } from "react-icons/ri";
-import { GrFormEdit } from "react-icons/gr";
+import moment from "moment";
+import EditBook from "./EditBook";
 function BooksLits() {
+  const [open, setOpen] = React.useState(false);
+  const [openEditBook, setOpenEdit] = React.useState(false);
+  const handlerEditUser = () => setOpenEdit(true);
+  const handleCloseAddUser = () => setOpenEdit(false);
   const booksApi = `${process.env.NEXT_PUBLIC_SERVER_URL}/v1/book`;
   const fetcher = async (url) =>
     await axios.get(url).then((res) => res.data.data);
   const { data, error, mutate } = useSWR(booksApi, fetcher);
-  const handDelete = (e) => {};
+  const handDelete = (e) => {
+    axios
+      .delete(`${process.env.NEXT_PUBLIC_SERVER_URL}/v1/book/${e}`)
+      .then((res) => {
+        if (res.status === 200) {
+          mutate();
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -48,9 +62,11 @@ function BooksLits() {
                 <TableCell align="right">{row.author}</TableCell>
                 <TableCell align="right">{row.isbn}</TableCell>
                 <TableCell align="right">{row.publisher}</TableCell>
-                <TableCell align="right">{row.publishedDate}</TableCell>
                 <TableCell align="right">
-                  <GrFormEdit />
+                  {moment(row.publishedDate).format("YYYY-MM-DD")}
+                </TableCell>
+                <TableCell align="right">
+                  <EditBook id={row._id} />
                 </TableCell>
                 <TableCell align="right">
                   <RiDeleteBinLine onClick={() => handDelete(row._id)} />
