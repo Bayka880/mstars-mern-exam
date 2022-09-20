@@ -43,6 +43,7 @@ function BooksLits() {
       .then((res) => {
         if (res.status === 200) {
           mutate();
+          handleClose();
         }
       })
       .catch((err) => console.log(err));
@@ -96,7 +97,7 @@ function BooksLits() {
                   >
                     <Box sx={style}>
                       <div>
-                        <button onClick={handDelete}>
+                        <button onClick={() => handDelete(row._id)}>
                           <RiDeleteBinLine />
                         </button>
                         <button onClick={() => handleClose()}>Cancel</button>
