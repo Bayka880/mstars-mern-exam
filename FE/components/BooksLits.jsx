@@ -12,11 +12,27 @@ import DatePicker from "react-datepicker";
 import { RiDeleteBinLine } from "react-icons/ri";
 import moment from "moment";
 import EditBook from "./EditBook";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
+import Modal from "@mui/material/Modal";
+const style = {
+  position: "absolute",
+  top: "30%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 350,
+  bgcolor: "background.paper",
+  boxShadow: 24,
+  p: 4,
+  textAlign: "center",
+};
 function BooksLits() {
   const [open, setOpen] = React.useState(false);
   const [openEditBook, setOpenEdit] = React.useState(false);
-  const handlerEditUser = () => setOpenEdit(true);
-  const handleCloseAddUser = () => setOpenEdit(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const booksApi = `${process.env.NEXT_PUBLIC_SERVER_URL}/v1/book`;
   const fetcher = async (url) =>
     await axios.get(url).then((res) => res.data.data);
@@ -69,7 +85,24 @@ function BooksLits() {
                   <EditBook id={row._id} />
                 </TableCell>
                 <TableCell align="right">
-                  <RiDeleteBinLine onClick={() => handDelete(row._id)} />
+                  <Button onClick={handleOpen}>
+                    <RiDeleteBinLine />
+                  </Button>
+                  <Modal
+                    open={open}
+                    onClose={handleClose}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                  >
+                    <Box sx={style}>
+                      <div>
+                        <button onClick={handDelete}>
+                          <RiDeleteBinLine />
+                        </button>
+                        <button onClick={() => handleClose()}>Cancel</button>
+                      </div>
+                    </Box>
+                  </Modal>
                 </TableCell>
               </TableRow>
             ))}
