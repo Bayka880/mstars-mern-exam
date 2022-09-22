@@ -12,7 +12,6 @@ app.use("/v1", routes);
 dotenv.config();
 const PORT = process.env.PORT;
 const ATLAS_MONGO_SERVER = process.env.ATLAS_MONGO_CONNECTION;
-
 mongoose.connect(ATLAS_MONGO_SERVER).then(() => {
   console.log("Connected to the MongoDB");
   app.listen(PORT, () => {
